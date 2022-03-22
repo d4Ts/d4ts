@@ -1,0 +1,26 @@
+from telegram.ext import Updater,CommandHandler, Filters, MessageHandler
+from telegram import Update
+from telegram.ext import CallbackContext
+
+
+import logging
+
+TOKEN = "5129984536:AAEV5_A_n5wjKbP8avq9C18bSNOsaCDDtZw"
+
+
+updater = Updater(token=TOKEN)
+
+dispatcher = updater.dispatcher
+
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+
+def echo(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+
+
+echo_handler= MessageHandler(Filters.text, echo)
+
+dispatcher.add_handler(echo_handler)
+
+updater.start_polling()
