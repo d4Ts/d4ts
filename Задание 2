@@ -1,0 +1,63 @@
+from telegram.ext import Updater,CommandHandler, Filters, MessageHandler
+from telegram import Update, ParseMode, MessageEntity
+from telegram.ext import CallbackContext
+
+
+import logging
+
+TOKEN = "5129984536:AAEV5_A_n5wjKbP8avq9C18bSNOsaCDDtZw"
+
+
+updater = Updater(token=TOKEN)
+
+dispatcher = updater.dispatcher
+
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+
+
+def audio(update,context: CallbackContext)-> None:
+    update.message.reply_text("Это аудио")
+
+def VP(update:Update,context: CallbackContext)-> None:
+    update.message.reply_text('Это фото или видео')
+
+def reply(update,context):
+    t = f"*:Жирный текст ответа на пересланное фото/видео*"
+    context.bot.send_message(chat_id=update.effective_chat.id, text=t,parse_mode=ParseMode.MARKDOWN)
+
+def URL(update,context):
+    update.message.reply_text('ссылка')
+
+def number(update,context):
+    key = 'key1'
+    value = context.args
+    context.user_data[key]= value
+    update.message.reply_text(key)
+
+def sum(update,context):
+    key = context.args[0]
+    if key in context.user_data:
+        update.message.reply_text(int(context.user_data[key]))
+    else:
+        update.message.reply_text('error')
+
+
+
+
+
+
+audio_handler =MessageHandler(Filters.audio, audio)
+dispatcher.add_handler(audio_handler)
+
+VP_handler =MessageHandler(((Filters.photo | Filters.video) & ~Filters.forwarded),VP)
+dispatcher.add_handler(VP_handler)
+
+dispatcher.add_handler(MessageHandler(Filters.forwarded & (Filters.photo | Filters.video),reply))
+
+dispatcher.add_handler(MessageHandler(Filters.entity(MessageEntity.URL),URL))
+
+dispatcher.add_handler(CommandHandler('number',number))
+dispatcher.add_handler(CommandHandler('sum',sum))
+
+updater.start_polling()
