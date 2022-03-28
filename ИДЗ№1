@@ -1,0 +1,96 @@
+#include <iostream>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+struct AEROFLOT
+{
+	char nazv[40];           // объявление структуры с типом переменных
+	int nomer[40];
+	char tip[40];
+};
+void vivod(int n,struct AEROFLOT*str);   //функция печати структуры
+void file(struct AEROFLOT*str,int n);    // функция сохранения в файл
+void f1(struct AEROFLOT*str,int n);      // функция поиска по пункту назначения
+void f2(struct AEROFLOT*str,int n);      // функция поиска по типу
+void f(struct AEROFLOT*str,int n){       // функция заполнения массива структуры
+int i;
+for (i=0;i<n;i++)
+{
+	printf("Введите название пункта назначения:\n");
+	fflush(stdin);
+	gets(str[i].nazv);
+	printf("Введите номер самолета:\n");
+	scanf("%d",str[i].nomer);
+	printf("Введите тип самолета:\n");
+	fflush(stdin);
+	gets(str[i].tip);
+ }
+}
+int main(int argc, char** argv){
+setlocale(LC_ALL,"Russian");
+int n=7,i=0;
+printf("Введите ваш список!\n\n");
+struct AEROFLOT*str;      
+str=(struct AEROFLOT*)malloc(n*sizeof(AEROFLOT));   // объявление переменной str с динамическим выделением памяти
+f(str,n);                                           // вызов функции заполнения
+vivod(n,str);                                       // вызов оставшихся функций
+file(str,n);
+f1(str,n);
+f2(str,n);
+free((AEROFLOT*)str);
+}
+void vivod(int n,struct AEROFLOT*str){              
+	printf("Полученные данные:\n");
+	for(int i=0;i<n;i++)
+	printf("%10s%10d%10s\n",str[i].nazv,str[i].nomer,str[i].tip);
+}
+void file(struct AEROFLOT*str,int n){
+char name[50];
+FILE*file=fopen("C:\\Users\\User\\Desktop\\name.txt","w");  // открытие файла
+for(int i=0;i<n;i++)
+{
+fprintf(file,"%10s%10d%10s\n",str[i].nazv,str[i].nomer,str[i].tip);   // вводит структуру в файл
+}
+fclose(file);                                                // закрытие файла
+}
+	void f1(struct AEROFLOT*str,int n){
+	char d[15];
+	int i;
+	printf("Введите пункт назначения, который вы хотите найти:\n");
+	fflush(stdin);
+	gets(d);
+	for(i=0;i<n;i++){
+	if(strcmp(d,str[i].nazv)==0){                          // логическая функция выдающая ноль при совпадении
+		printf("Номер самолета с таким названием рейса:\n");
+		printf("%d\n",str[i].nomer);
+		printf("Тип самолета с таким названием рейса:\n");
+		printf("%s\n",str[i].tip);		
+		}
+		else 
+		{
+		printf("Пункт назначения - %s не найден в списке\n",d);
+		break;
+		}
+	}	
+	}
+void f2(struct AEROFLOT*str,int n){
+	char d[30];
+	int i;
+	printf("Введите нужный тип самолета\n");
+	fflush(stdin);
+	gets(d);
+	for(i=0;i,n;i++){
+	if(strcmp(d,str[i].tip)==0){
+	printf("Номер самолета с таким типом самолета:\n");
+	printf("%d\n",str[i].nomer);
+	printf("Пункт назначения самолета с таким типом самолета:\n");
+	printf("%s\n",str[i].nazv);	
+	}
+	else{
+	printf("Тип самолета - %s не найден в списке",d);
+	break;
+ }
+ }
+}
+ 
