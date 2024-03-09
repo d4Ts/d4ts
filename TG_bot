@@ -1,0 +1,44 @@
+import telebot
+from config import Token, keys
+from extension import *
+
+bot = telebot.TeleBot(Token)
+
+
+@bot.message_handler(commands=['start', 'help'])
+def help(message: telebot.types.Message):
+    text = 'Чтобы начать работу введите <имя валюты, цену которой хотите узнать> <имя валюты в которой нужно узнать ' \
+           'цену первой валюты> <количество первой валюты>\n Чтобы узнать все валюты введите команду /value'
+    bot.reply_to(message, text)
+
+
+@bot.message_handler(commands=['value'])
+def value(message: telebot.types.Message):
+    text = 'Валюты:'
+    for key in keys.keys():
+        text = '\n'.join((text, key))
+    bot.reply_to(message, text)
+
+
+@bot.message_handler(content_types=['text', ])
+def convert(message: telebot.types.Message):
+    try:
+        values = message.text.split(' ')
+        if len(values) != 3:
+            raise APIException('Неправильное количество параметров')
+
+        quote, base, amount = values
+        total = CryptoConverter.get_price(quote, base, amount)
+    except APIException as e:
+        bot.reply_to(message, f' Oшибка пользователя\n {e}')
+
+
+    except Exception as x:
+        bot.reply_to(message, f'Не удалось обработать команду\n {x}')
+
+    else:
+        text = f'Цена {amount} {quote} в {base} = {total} {base}'
+        bot.send_message(message.chat.id, text)
+
+
+bot.polling()
