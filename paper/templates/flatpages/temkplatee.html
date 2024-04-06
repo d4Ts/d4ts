@@ -1,0 +1,34 @@
+
+{% extends 'flatpages/default.html' %}
+
+
+{% block content %}
+   <h1>Все статьи</h1>
+   <hr>
+   {% if post %}
+       <table>
+           <tr>
+               <td>Название</td>
+               <td>Текст статьи</td>
+               <td>Время</td>
+
+           </tr>
+
+           {% for posts in post %}
+           <tr>
+               <td>{{ posts.heading_of_article }}</td>
+                <!-- Добавим специальный фильтр truncatechars,
+                чтобы ограничить количество символов до 15.
+                Все остальные символы превратятся в многоточие. -->
+               <td>{{ posts.text_of_article|truncatechars:20 }}</td>
+               <td>{{ posts.datetime_of_appear }}</td>
+
+
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>статьи кончились</h2>
+   {% endif %}
+{% endblock content %}

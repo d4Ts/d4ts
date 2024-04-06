@@ -1,12 +1,12 @@
 from datetime import datetime
 from django.views.generic import ListView, DetailView
-from .models import Post
+from .models import *
 
 
 class PostList(ListView):
     model = Post
     ordering = 'datetime_of_appear'
-    template_name = 'default.html'
+    template_name = 'flatpages/temkplatee.html'
     context_object_name = 'post'
 
     # Метод get_context_data позволяет нам изменить набор данных,
@@ -28,6 +28,6 @@ class PostDetail(DetailView):
     # Модель всё та же, но мы хотим получать информацию по отдельному товару
     model = Post
     # Используем другой шаблон — product.html
-    template_name = 'default.html'
+    template_name = 'flatpages/article.html'
     # Название объекта, в котором будет выбранный пользователем продукт
-    context_object_name = 'post'
+    context_object_name = 'article'

@@ -47,6 +47,11 @@ class Post(models.Model):
     def preview(self):
         return f'{self.text_of_article[:124]}...'
 
+    def __str__(self):
+        return f'{self.heading_of_article}:{self.text_of_article[:20]}'
+
+
+
 
 class PostCategory(models.Model):
     connectionPost = models.ForeignKey(Post, on_delete=models.CASCADE)
